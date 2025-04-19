@@ -1,6 +1,6 @@
 diffusers==0.28.0
 transformers==4.41.1
-gradio==4.31.5
+gradio
 bitsandbytes==0.43.1
 accelerate==0.30.1
 protobuf==3.20
@@ -9,9 +9,13 @@ tensorboardX
 safetensors
 pillow
 einops
-torch
-peft
+torch==2.5.0
+peft==0.10.0
 xformers
 onnxruntime
 av
 torchvision
+
+spaces 
+httpx[socks]
+huggingface_hub==0.25.0
