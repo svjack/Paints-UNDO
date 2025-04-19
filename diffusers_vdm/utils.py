@@ -16,7 +16,7 @@ def resize_and_center_crop(image, target_width, target_height, interpolation=cv2
     cropped_image = resized_image[y_start:y_start + target_height, x_start:x_start + target_width]
     return cropped_image
 
-
+'''
 def save_bcthw_as_mp4(x, output_filename, fps=10):
     b, c, t, h, w = x.shape
 
@@ -32,7 +32,43 @@ def save_bcthw_as_mp4(x, output_filename, fps=10):
     x = einops.rearrange(x, '(m n) c t h w -> t (m h) (n w) c', n=per_row)
     torchvision.io.write_video(output_filename, x, fps=fps, video_codec='h264', options={'crf': '1'})
     return x
+'''
 
+import cv2
+import numpy as np
+
+def save_bcthw_as_mp4(x, output_filename, fps=10):
+    b, c, t, h, w = x.shape
+
+    per_row = b
+    for p in [6, 5, 4, 3, 2]:
+        if b % p == 0:
+            per_row = p
+            break
+
+    os.makedirs(os.path.dirname(os.path.abspath(os.path.realpath(output_filename))), exist_ok=True)
+    x = torch.clamp(x.float(), -1., 1.) * 127.5 + 127.5
+    x = x.detach().cpu().to(torch.uint8)
+    x = einops.rearrange(x, '(m n) c t h w -> t (m h) (n w) c', n=per_row)
+    
+    # Convert to numpy array and BGR format (OpenCV default)
+    x_np = x.numpy()
+    if c == 3:  # If RGB, convert to BGR
+        x_np = x_np[..., ::-1]
+    
+    # Get video dimensions
+    height, width = x_np.shape[1:3]
+    
+    # Create VideoWriter
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(output_filename, fourcc, fps, (width, height))
+    
+    # Write each frame
+    for frame in x_np:
+        out.write(frame)
+    
+    out.release()
+    return x
 
 def save_bcthw_as_png(x, output_filename):
     os.makedirs(os.path.dirname(os.path.abspath(os.path.realpath(output_filename))), exist_ok=True)
