@@ -20,10 +20,13 @@ Paints-Undo presents a family of models that take an image as input and then out
 
 You can deploy PaintsUndo locally via:
 
-    git clone https://github.com/lllyasviel/Paints-UNDO.git
+    #git clone https://github.com/lllyasviel/Paints-UNDO.git
+    git clone https://github.com/svjack/Paints-UNDO.git
     cd Paints-UNDO
-    conda create -n paints_undo python=3.10
-    conda activate paints_undo
+    #conda create -n paints_undo python=3.10
+    #conda activate paints_undo
+    conda install python=3.10
+    
     pip install xformers
     pip install -r requirements.txt
     python gradio_app.py
