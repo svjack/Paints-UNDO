@@ -29,6 +29,10 @@ You can deploy PaintsUndo locally via:
     
     pip install xformers
     pip install -r requirements.txt
+
+    pip install -U gradio
+    pip install huggingface_hub==0.25.0
+    
     python gradio_app.py
 
 (If you do not know how to use these commands, you can paste those commands to ChatGPT and ask ChatGPT to explain and give more detailed instructions.)
