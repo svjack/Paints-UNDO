@@ -35,6 +35,10 @@ You can deploy PaintsUndo locally via:
     
     python gradio_app.py
 
+    python cli_app.py chongyun0.png \
+    --video_prompt "masterpiece, best quality, highly detailed" \
+    --output "chongyun0_sketch.mp4"
+
 (If you do not know how to use these commands, you can paste those commands to ChatGPT and ask ChatGPT to explain and give more detailed instructions.)
 
 The inference is tested with 24GB VRAM on Nvidia 4090 and 3090TI. It may also work with 16GB VRAM, but does not work with 8GB. My estimation is that, under extreme optimization (including weight offloading and sliced attention), the theoretical minimal VRAM requirement is about 10~12.5 GB.
