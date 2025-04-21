@@ -2,6 +2,62 @@
 huggingface-cli download svjack/Genshin-Impact-Portrait-with-Tags-Filtered-IID-Gender-SP --repo-type dataset --revision main --include "genshin_impact_CHONGYUN_images_and_texts/*" --local-dir .
 
 python run_cli_app.py
+
+import os
+import shutil
+from moviepy.editor import VideoFileClip
+from pathlib import Path
+
+def process_videos_and_copy_files(source_dir, target_dir):
+    """
+    处理源目录中的所有MP4文件并拷贝其他文件到目标目录
+    
+    参数:
+        source_dir: 源目录路径
+        target_dir: 目标目录路径
+    """
+    # 确保目标目录存在
+    Path(target_dir).mkdir(parents=True, exist_ok=True)
+    
+    # 遍历源目录中的所有文件
+    for root, dirs, files in os.walk(source_dir):
+        for filename in files:
+            source_path = os.path.join(root, filename)
+            relative_path = os.path.relpath(source_path, source_dir)
+            target_path = os.path.join(target_dir, relative_path)
+            
+            # 确保目标文件的目录存在
+            os.makedirs(os.path.dirname(target_path), exist_ok=True)
+            
+            # 处理MP4文件
+            if filename.lower().endswith('.mp4'):
+                try:
+                    print(f"正在处理视频文件: {source_path}")
+                    
+                    # 使用MoviePy处理视频
+                    clip = VideoFileClip(source_path)
+                    clip.write_videofile(target_path)
+                    clip.close()
+                    
+                    print(f"视频已保存到: {target_path}")
+                except Exception as e:
+                    print(f"处理视频 {source_path} 时出错: {str(e)}")
+            else:
+                # 拷贝非MP4文件
+                try:
+                    shutil.copy2(source_path, target_path)
+                    print(f"已拷贝文件: {source_path} -> {target_path}")
+                except Exception as e:
+                    print(f"拷贝文件 {source_path} 时出错: {str(e)}")
+
+# 使用示例
+if __name__ == "__main__":
+    source_directory = "genshin_impact_CHONGYUN_Paints_UNDO_UnChunked"
+    target_directory = "Genshin_Impact_CHONGYUN_Paints_UNDO_UnChunked"
+    
+    process_videos_and_copy_files(source_directory, target_directory)
+    print("所有文件处理完成!")
+
 '''
 
 import os
